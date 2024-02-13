@@ -4,6 +4,7 @@ service MS {
 
   @odata.draft.enabled
 entity table1 as projection on my.table1;
+entity Criticality as projection on my.Criticality;
 entity LiabilityBasedOnAmount_1 as projection on my.LiabilityBasedOnAmount_1 ;  
   annotate LiabilityBasedOnAmount_1 with @UI.Chart #LiabilityBasedOnAmount_1: {
     
@@ -19,6 +20,8 @@ entity LiabilityBasedOnAmount_1 as projection on my.LiabilityBasedOnAmount_1 ;
             Role     : #Category
         }]
     };
+  
+    view myview as select from my.myview;
 // }   
 //  annotate demo.aggregate.LiabilityBasedOnAmount_1 with @(
 //     UI: {

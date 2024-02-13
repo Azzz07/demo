@@ -65,3 +65,28 @@ entity table1{
     inquiryNumber:Integer;
     totalOrderItems:Integer;
 }
+
+  annotate table1 with @(Criticality: {
+  Calculation: #Column,
+  Values: [
+    { value: 0, color: 'Neutral', icon: 'sap-icon://alert' },
+    { value: 1, threshold: 10, color: 'Critical', icon: 'sap-icon://message-error' },
+    { value: 2, threshold: 20, color: 'Error', icon: 'sap-icon://alert' }
+    // Add more criticality levels as needed
+  ]
+});
+
+
+view myview as select from table1{
+     key id,
+    customerName,
+    PoNumber,
+    customerNumber,
+};
+
+entity Criticality  {
+    key id:Integer;
+        cVal: Integer;
+        cSTring:String;
+
+};

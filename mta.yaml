@@ -8,6 +8,7 @@ modules:
   path: gen/srv
   requires:
   - name: task03-db
+  - name: uaa_task03
   provides:
   - name: srv-api
     properties:
@@ -41,6 +42,22 @@ modules:
     - artifacts:
       - list1.zip
       name: list1
+      target-path: resources/
+    - artifacts:
+      - can.zip
+      name: can
+      target-path: resources/
+    - artifacts:
+      - myview.zip
+      name: myview
+      target-path: resources/
+    - artifacts:
+      - criti.zip
+      name: criti
+      target-path: resources/
+    - artifacts:
+      - cri.zip
+      name: cri
       target-path: resources/
 - name: ovrview
   type: html5
@@ -89,6 +106,76 @@ modules:
     - npm install
     - npm run build:cf
     supported-platforms: []
+- name: task03-destination-content
+  type: com.sap.application.content
+  requires:
+  - name: task03-destination-service
+    parameters:
+      content-target: true
+  - name: task03-repo-host
+    parameters:
+      service-key:
+        name: task03-repo-host-key
+  - name: uaa_task03
+    parameters:
+      service-key:
+        name: uaa_task03-key
+  parameters:
+    content:
+      instance:
+        destinations:
+        - Name: btp_task03_repo_host
+          ServiceInstanceName: task03-html5-srv
+          ServiceKeyName: task03-repo-host-key
+          sap.cloud.service: btp
+        - Authentication: OAuth2UserTokenExchange
+          Name: btp_uaa_task03
+          ServiceInstanceName: task03-xsuaa-service
+          ServiceKeyName: uaa_task03-key
+          sap.cloud.service: btp
+        existing_destinations_policy: ignore
+  build-parameters:
+    no-source: true
+- name: can
+  type: html5
+  path: app/can
+  build-parameters:
+    build-result: dist
+    builder: custom
+    commands:
+    - npm install
+    - npm run build:cf
+    supported-platforms: []
+- name: myview
+  type: html5
+  path: app/myview
+  build-parameters:
+    build-result: dist
+    builder: custom
+    commands:
+    - npm install
+    - npm run build:cf
+    supported-platforms: []
+- name: criti
+  type: html5
+  path: app/criti
+  build-parameters:
+    build-result: dist
+    builder: custom
+    commands:
+    - npm install
+    - npm run build:cf
+    supported-platforms: []
+- name: cri
+  type: html5
+  path: app/cri
+  build-parameters:
+    build-result: dist
+    builder: custom
+    commands:
+    - npm install
+    - npm run build:cf
+    supported-platforms: []
 resources:
 - name: task03-repo-host
   type: org.cloudfoundry.managed-service
@@ -100,7 +187,7 @@ resources:
   type: org.cloudfoundry.managed-service
   parameters:
     config:
-      HTML5Runtime_enabled: false
+      HTML5Runtime_enabled: true
       init_data:
         instance:
           destinations:
@@ -109,16 +196,32 @@ resources:
             ProxyType: Internet
             Type: HTTP
             URL: https://ui5.sap.com
+          - Authentication: NoAuthentication
+            HTML5.DynamicDestination: true
+            HTML5.ForwardAuthToken: true
+            Name: task03-srv-api
+            ProxyType: Internet
+            Type: HTTP
+            URL: ~{srv-api/srv-url}
           existing_destinations_policy: update
       version: 1.0.0
     service: destination
     service-name: task03-destination-service
     service-plan: lite
+  requires:
+  - name: srv-api
 - name: task03-db
   type: com.sap.xs.hdi-container
   parameters:
     service: hana
     service-plan: hdi-shared
+- name: uaa_task03
+  type: org.cloudfoundry.managed-service
+  parameters:
+    path: ./xs-security.json
+    service: xsuaa
+    service-name: task03-xsuaa-service
+    service-plan: application
 parameters:
   deploy_mode: html5-repo
   enable-parallel-deployments: true

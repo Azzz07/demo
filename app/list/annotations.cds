@@ -22,6 +22,25 @@ annotate service.LiabilityBasedOnAmount_1 with @(
             Label : 'years',
             Value : years,
         },
+        {
+            $Type : 'UI.DataFieldForIntentBasedNavigation',
+            SemanticObject : 'apptestsemobj',
+            Action : 'display',
+            Label : 'Display apptestsemobj',
+            Mapping : [
+                {
+                    $Type : 'Common.SemanticObjectMappingType',
+                    SemanticObjectProperty : 'apptestsemobj',
+                    LocalProperty : chartDimension,
+                },
+            ],
+        },
+        {
+            $Type : 'UI.DataFieldForIntentBasedNavigation',
+            SemanticObject : 'obj',
+            Action : 'display',
+            Label : 'Display obj',
+        },
     ]
 );
 annotate service.LiabilityBasedOnAmount_1 with @(
